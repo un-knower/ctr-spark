@@ -1,0 +1,9 @@
+CTR 调研&实验项目
+
+实验步骤：
+1.在项目目录执行mvn install,生成ctr-spark.jar
+2.拷贝jar到内网集群的192.168.31.201上，执行以下命令进行模型训练
+  nohup /usr/hdp/current/spark2-client/bin/spark-submit --class com.mtty.GBDTTraining --master yarn --driver-memory 4G --executor-memory 11G --executor-cores 6 --num-executors 11 ctr-spark.jar > run_v.log 2>&1
+  执行以下命令进行模型检验
+  nohup /usr/hdp/current/spark2-client/bin/spark-submit --class com.mtty.GBDTValidating --master yarn --driver-memory 4G --executor-memory 11G --executor-cores 6 --num-executors 11 ctr-spark.jar > run_v.log 2>&1
+  另外com.mtty.tool.ShowTree可以用于模型提取
