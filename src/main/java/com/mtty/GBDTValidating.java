@@ -27,6 +27,7 @@ public class GBDTValidating {
     private static void calculateBias(JavaSparkContext javaSparkContext){
         // 读取编码后的数据
         JavaRDD<LabeledPoint> datas = MLUtils.loadLibSVMFile(javaSparkContext.sc(), "hdfs://m1:8020/user/root/tr-svm").toJavaRDD();
+        datas = datas.map( oldPoint -> new LabeledPoint(oldPoint.label()*2 -1,oldPoint.features()));
         double originLabelAvg = datas.aggregate(0.0,(v,point)->v+point.label(),(v1,v2)->v1+v2);
         originLabelAvg/=datas.count();
         double labelBias = Math.log1p(originLabelAvg)-Math.log1p(-originLabelAvg);

@@ -91,7 +91,7 @@ public class PrepareData {
         JavaRDD<LabeledVector> trFeatures = trDatas.map(m -> {
             LabeledVector labeledVector = new LabeledVector();
             Integer originLabel = Integer.parseInt(m.get("Label"));
-            labeledVector.setLabel(originLabel*2 -1);
+            labeledVector.setLabel(originLabel); //sparkml 内部将对标签做2y-1映射
 
             for (int i = 1; i < 14; ++i) {
                 String field = m.get("I" + i);
