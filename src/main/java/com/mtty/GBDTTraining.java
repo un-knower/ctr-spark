@@ -10,6 +10,7 @@ import org.apache.spark.mllib.tree.configuration.BoostingStrategy;
 import org.apache.spark.mllib.tree.impurity.Variance;
 import org.apache.spark.mllib.tree.loss.LogLoss;
 import org.apache.spark.mllib.tree.loss.Losses;
+import org.apache.spark.mllib.tree.model.DecisionTreeModel;
 import org.apache.spark.mllib.tree.model.GradientBoostedTreesModel;
 import org.apache.spark.mllib.util.MLUtils;
 
@@ -38,6 +39,12 @@ public class GBDTTraining {
 
         // 训练模型
         final GradientBoostedTreesModel model = GradientBoostedTrees.train(trData, boostingStrategy);
+
+        DecisionTreeModel[] trees = model.trees();
+        for(int i=0;i<trees.length;i++){
+            System.out.println("trees "+i);
+            System.out.println(trees[i].toDebugString());
+        }
 
         // save model
         model.save(javaSparkContext.sc(), "hdfs://m1:8020/user/root/gbdt-model");

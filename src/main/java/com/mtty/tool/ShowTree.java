@@ -11,13 +11,14 @@ import java.util.regex.Pattern;
 public class ShowTree {
 
     final static Pattern ifPattern = Pattern.compile("\\s+(?:If|Else)\\s+\\(\\w+\\s+(\\d+)\\s+<=\\s+(\\S+)\\)");
-    final static Pattern predictPattern = Pattern.compile("\\s+Predict:\\s+(\\S+)");
+    final static Pattern predictPattern = Pattern.compile("\\s+Predict:\\s+(\\S+)\\s+(.+)");
 
     private static class Node{
         int id;
         int feature;
         double threashold;
         double gamma;
+        String debugString;
         Node left;
         Node right;
 
@@ -44,6 +45,7 @@ public class ShowTree {
                 Node n = new Node();
                 n.feature = -1;
                 n.gamma = Double.parseDouble(matcher.group(1));
+                n.debugString = matcher.group(2);
                 return n;
             }else{
                 throw new RuntimeException("parse no node!!"+line);
@@ -113,7 +115,12 @@ public class ShowTree {
             if(n.id!=1){
                 sb.append(",");
             }
-            sb.append("{\"id\":"+n.id+",\"feature\":"+n.feature+",\"threashold\":"+n.threashold+",\"gamma\":"+n.gamma+"}");
+            if(n.debugString==null) {
+                sb.append("{\"id\":" + n.id + ",\"feature\":" + n.feature + ",\"threashold\":" + n.threashold + ",\"gamma\":" + n.gamma + "}");
+            }else{
+                sb.append("{\"id\":" + n.id + ",\"feature\":" + n.feature + ",\"threashold\":" + n.threashold + ",\"gamma\":" + n.gamma + "\"debugString\":\""
+                        +n.debugString + "\"}");
+            }
             if(n.left!=null){
                 n.left.id = n.id<<1;
                 queue.add(n.left);
